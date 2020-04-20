@@ -1,0 +1,38 @@
+#!/usr/bin/env node 
+// spinner
+const ora = require('ora'); 
+// telegram configuration
+const TelegramBot   = require('node-telegram-bot-api');
+require('dotenv/config');
+const token = process.env.API_KEY;
+const bot = new TelegramBot(token, { polling: false }); 
+
+// get arguments
+const [,, ...args] = process.argv;
+
+// send message function 
+
+async function sender(message){
+    const spinner = ora('Enviando mensagem');
+    spinner.spinner = 'hearts';
+    spinner.start();
+    await bot.sendMessage(process.env.CHAT_ID_PROD, message); 
+    spinner.stop(); 
+}
+
+if(args[0] == '-m' && args.length == 2 ){
+    sender(args[1]);  
+}else if (args.length > 2){
+    console.log(`número excessivo de argumentos`);
+}else if( args[0] == '-h' ){
+    console.log(
+    `-------- Ananda Bot (CLI) v0.0.1 --------
+    uso:
+    ananda -m [mensagem]
+    ananda -h [ajuda]
+    -------------------------
+                             by @kaio_dev 2020
+`); 
+}else{
+   console.log('Argumentos inválidos'); 
+}
